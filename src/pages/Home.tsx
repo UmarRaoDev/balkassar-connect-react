@@ -12,29 +12,49 @@ import InstallGuide from "../components/InstallGuide";
 import ScrollTopButton from "../components/ScrollTopButton";
 
 const allCategory = { id: "all", icon: "🧩", label: "تمام خدمات" };
-
+const CACHE_KEY = "workers-cache";
+const CATS_CACHE_KEY = "categories-cache";
 export default function Home() {
-  const [workers, setWorkers] = useState([]);
-  const [cats, setCats] = useState(null); // null = still loading from Firestore
-  const [status, setStatus] = useState("loading"); // loading | ready | error
+  const [workers, setWorkers] = useState(() => {
+  try {
+    return JSON.parse(localStorage.getItem(CACHE_KEY)) || [];
+  } catch {
+    return [];
+  }
+});
+  const [cats, setCats] = useState(() => {
+  try {
+    return JSON.parse(localStorage.getItem(CATS_CACHE_KEY));
+  } catch {
+    return null;
+  }
+}); // null = nothing saved yet, still loading from Firestore // null = still loading from Firestore
+ const [status, setStatus] = useState(() =>
+  localStorage.getItem(CACHE_KEY) ? "ready" : "loading"
+);// loading | ready | error
   const [category, setCategory] = useState("all");
   const listRef = useRef(null);
   const lastCategory = useRef(null);
 
   useEffect(() => {
     async function load() {
-      try {
-        const snapshot = await getDocs(collection(db, "workers"));
-        setWorkers(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
-        setStatus("ready");
-      } catch (error) {
-        console.error("Firebase error:", error);
-        setStatus("error");
-      }
-    }
+  try {
+    const snapshot = await getDocs(collection(db, "workers"));
+    const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+    setWorkers(list);
+    setStatus("ready");
+    localStorage.setItem(CACHE_KEY, JSON.stringify(list));
+  } catch (error) {
+    console.error("Firebase error:", error);
+    setStatus((s) => (s === "ready" ? s : "error"));
+  }
+}
     load();
     fetchCategories()
-      .then((r) => setCats(r.list))
+  .then((r) => {
+    setCats(r.list);
+    localStorage.setItem(CATS_CACHE_KEY, JSON.stringify(r.list));
+  })
       .catch((e) => {
         console.error("Categories error:", e);
         setCats(defaultCategories);
