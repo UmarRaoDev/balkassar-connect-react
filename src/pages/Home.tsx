@@ -10,6 +10,8 @@ import WorkerCard from "../components/WorkerCard";
 import GroupCard from "../components/GroupCard";
 import InstallGuide from "../components/InstallGuide";
 import ScrollTopButton from "../components/ScrollTopButton";
+import SearchBar from "../components/SearchBar";
+import { matchesWorker } from "../search";
 
 const allCategory = { id: "all", icon: "🧩", label: "تمام خدمات" };
 const CACHE_KEY = "workers-cache";
@@ -33,6 +35,7 @@ export default function Home() {
   localStorage.getItem(CACHE_KEY) ? "ready" : "loading"
 );// loading | ready | error
   const [category, setCategory] = useState("all");
+  const [query, setQuery] = useState("");
   const listRef = useRef(null);
   const lastCategory = useRef(null);
 
@@ -64,6 +67,7 @@ export default function Home() {
   const categories = [allCategory, ...(cats || [])];
 
   const selectCategory = (id) => {
+    setQuery("");
     lastCategory.current = id;
     setCategory(id);
     setTimeout(() => {
@@ -71,26 +75,43 @@ export default function Home() {
     }, 100);
   };
 
-  const filtered = category === "all" ? workers : workers.filter((w) => w.category === category);
-  const showGroups = category === "all" || category === "whatsapp-group";
-  const title = categories.find((c) => c.id === category)?.label;
+  const searching = query.trim().length > 0;
+  const filtered = searching
+    ? workers.filter((w) => matchesWorker(w, query, cats || []))
+    : category === "all"
+      ? workers
+      : workers.filter((w) => w.category === category);
+  const showGroups = !searching && (category === "all" || category === "whatsapp-group");
+  const title = searching
+    ? `تلاش کے نتائج (${filtered.length})`
+    : categories.find((c) => c.id === category)?.label;
+
+  const notFoundLink = `https://wa.me/923140978485?text=${encodeURIComponent(
+    `السلام علیکم، میں "${query.trim()}" تلاش کر رہا تھا لیکن بلکسر کنیکٹ پر نہیں ملا۔`
+  )}`;
 
   return (
     <>
       <Header />
 
       <main className="mx-auto w-full max-w-[1200px] px-3 sm:px-4">
-        {cats === null ? (
-          <p className="p-8 text-center">لوڈ ہو رہا ہے...</p>
-        ) : (
-          <CategoryGrid categories={categories} active={category} onSelect={selectCategory} />
+        <SearchBar value={query} onChange={setQuery} />
+
+        {!searching && (
+          <>
+            {cats === null ? (
+              <p className="p-8 text-center">لوڈ ہو رہا ہے...</p>
+            ) : (
+              <CategoryGrid categories={cats} active={category} onSelect={selectCategory} />
+            )}
+
+            <p dir="rtl" className="mt-3 text-center font-urdu text-[0.85rem] text-ink-light italic opacity-80">
+              مزید سروسز شامل کی جا رہی ہیں...
+            </p>
+
+            <CreatorCard />
+          </>
         )}
-
-        <p dir="rtl" className="mt-3 text-center font-urdu text-[0.85rem] text-ink-light italic opacity-80">
-          مزید سروسز شامل کی جا رہی ہیں...
-        </p>
-
-        <CreatorCard />
 
         <section ref={listRef} className="scroll-mt-4">
           <h2
@@ -113,11 +134,26 @@ export default function Home() {
                   key={worker.id}
                   worker={worker}
                   index={i}
-                  showType={category === "all"}
+                  showType={category === "all" || searching}
                   showSubtype={cats?.find((c) => c.id === worker.category)?.showSubtype}
                 />
               ))}
               {showGroups && whatsappGroups.map((g) => <GroupCard key={g.link} group={g} />)}
+            </div>
+          )}
+
+          {status === "ready" && searching && filtered.length === 0 && (
+            <div dir="rtl" className="mx-auto max-w-lg rounded-2xl bg-white p-5 text-center shadow-soft">
+              <p className="mb-1 font-urdu text-base font-bold">کوئی نتیجہ نہیں ملا</p>
+              <p className="mb-4 font-urdu text-[0.9rem] leading-[1.8] text-ink-light">
+                جو آپ ڈھونڈ رہے ہیں وہ ہمیں بتائیں، ہم اسے شامل کر دیں گے۔
+              </p>
+              <a
+                href={notFoundLink}
+                className="inline-block rounded-xl bg-whatsapp px-5 py-2.5 font-urdu text-[0.9rem] font-semibold text-white shadow-[0_2px_8px_rgba(37,211,102,0.3)] transition active:scale-95"
+              >
+                ہمیں بتائیں
+              </a>
             </div>
           )}
         </section>
