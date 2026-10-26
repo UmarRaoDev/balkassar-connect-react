@@ -4,6 +4,7 @@ import { signOut } from "firebase/auth";
 import { auth, db } from "../firebase";
 import WorkerForm from "./WorkerForm";
 import CategoriesManager from "./CategoriesManager";
+import PendingRequests from "../components/PendingRequests";
 import { fetchCategories, defaultCategories } from "../categories";
 
 const emptyForm = { name: "", phone: "", category: "", location: "", type: "", subtype: "" };
@@ -125,13 +126,14 @@ export default function Panel() {
         </div>
 
         <div className="mb-6 flex gap-2">
-          {[
+                   {[
             ["workers", "👷 کارکن"],
             ["categories", "🗂️ کیٹیگریز"],
+            ["requests", "📥 درخواستیں"],
           ].map(([id, label]) => (
             <button
               key={id}
-              onClick={() => setTab(id)}
+                            onClick={() => { setTab(id); if (id === "workers") load(); }}
               className={`flex-1 cursor-pointer rounded-lg py-3 font-semibold shadow-[0_2px_8px_rgba(0,0,0,0.06)] ${
                 tab === id ? "bg-[#1a1a2e] text-white" : "bg-white text-[#555]"
               }`}
@@ -194,8 +196,10 @@ export default function Panel() {
           ))
         )}
         </>
-        ) : (
+                ) : tab === "categories" ? (
           <CategoriesManager categories={cats} seeded={seeded} workers={workers} reload={loadCats} showToast={showToast} />
+        ) : (
+          <PendingRequests />
         )}
       </div>
 

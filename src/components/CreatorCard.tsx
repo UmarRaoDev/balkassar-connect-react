@@ -10,7 +10,7 @@ export default function CreatorCard() {
 
       <div className="relative mb-4 flex items-center gap-4">
         <img
-          src="/new.png"
+          src="/new.webp"
           alt="Rao Umar Farooq"
           className="size-[60px] rounded-full border-[3px] border-white/30 object-cover shadow-[0_4px_12px_rgba(0,0,0,0.2)] sm:size-20"
         />

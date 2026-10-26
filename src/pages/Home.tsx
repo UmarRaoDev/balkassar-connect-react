@@ -5,7 +5,7 @@ import { fetchCategories, defaultCategories } from "../categories";
 import { whatsappGroups } from "../data";
 import Header from "../components/Header";
 import CategoryGrid from "../components/CategoryGrid";
-import CreatorCard from "../components/CreatorCard";
+import AddServiceButton from "../components/AddServiceButton";
 import WorkerCard from "../components/WorkerCard";
 import GroupCard from "../components/GroupCard";
 import InstallGuide from "../components/InstallGuide";
@@ -95,6 +95,7 @@ export default function Home() {
       <Header />
 
       <main className="mx-auto w-full max-w-[1200px] px-3 sm:px-4">
+
         <SearchBar value={query} onChange={setQuery} />
 
         {!searching && (
@@ -104,12 +105,11 @@ export default function Home() {
             ) : (
               <CategoryGrid categories={cats} active={category} onSelect={selectCategory} />
             )}
+            <AddServiceButton />
 
-            <p dir="rtl" className="mt-3 text-center font-urdu text-[0.85rem] text-ink-light italic opacity-80">
-              مزید سروسز شامل کی جا رہی ہیں...
-            </p>
+            
 
-            <CreatorCard />
+         
           </>
         )}
 
@@ -135,7 +135,7 @@ export default function Home() {
                   worker={worker}
                   index={i}
                   showType={category === "all" || searching}
-                  showSubtype={cats?.find((c) => c.id === worker.category)?.showSubtype}
+                  categoryShowsSubtype={cats?.find((c) => c.id === worker.category)?.showSubtype}
                 />
               ))}
               {showGroups && whatsappGroups.map((g) => <GroupCard key={g.link} group={g} />)}

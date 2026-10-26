@@ -1,8 +1,7 @@
-import { subtypeCategories } from "../data";
 import { WhatsAppIcon, CallIcon } from "./Icons";
 
-export default function WorkerCard({ worker, showType, index }) {
-  const showSubtype = subtypeCategories.includes(worker.category) && worker.subtype;
+export default function WorkerCard({ worker, showType, index, categoryShowsSubtype }) {
+  const showSubtype = categoryShowsSubtype && worker.subtype;
   const badge = showType ? worker.type : showSubtype ? worker.subtype : "";
 
   return (

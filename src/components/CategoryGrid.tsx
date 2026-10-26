@@ -1,11 +1,16 @@
-// Compact "app launcher" style categories: small round icon + 2-line label, 3 per row.
-// The old big "All Services" card is hidden here, so Home.tsx needs no change.
+import { useState } from "react";
+
+const SHOW_FIRST = 8; // how many categories to show before "See all"
+
 export default function CategoryGrid({ categories, active, onSelect }) {
+  const [expanded, setExpanded] = useState(false);
   const items = categories.filter((c) => c.id !== "all");
+  const canCollapse = items.length > SHOW_FIRST;
+  const visible = expanded || !canCollapse ? items : items.slice(0, SHOW_FIRST);
 
   return (
     <div dir="rtl" className="grid grid-cols-3 gap-x-2 gap-y-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-      {items.map((c) => {
+      {visible.map((c) => {
         const isActive = c.id === active;
         return (
           <button
@@ -34,6 +39,20 @@ export default function CategoryGrid({ categories, active, onSelect }) {
           </button>
         );
       })}
+
+      {canCollapse && (
+        <button
+          onClick={() => setExpanded((v) => !v)}
+          className="flex cursor-pointer flex-col items-center gap-1.5 active:scale-95"
+        >
+          <span className="flex size-14 items-center justify-center rounded-full bg-primary text-[1.6rem] text-white shadow-soft">
+            {expanded ? "▲" : "⋯"}
+          </span>
+          <span className="w-full px-0.5 text-center font-urdu text-[0.7rem] leading-snug font-bold text-ink sm:text-xs">
+            {expanded ? "کم دکھائیں" : "تمام دیکھیں"}
+          </span>
+        </button>
+      )}
     </div>
   );
 }
