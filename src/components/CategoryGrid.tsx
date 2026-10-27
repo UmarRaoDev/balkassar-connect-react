@@ -17,7 +17,7 @@ export default function CategoryGrid({ categories, active, onSelect }) {
             key={c.id}
             id={`cat-${c.id}`}
             // tapping the selected category again shows everyone
-            onClick={() => onSelect(isActive ? "all" : c.id)}
+           onClick={() => onSelect(c.id)}
             className="flex cursor-pointer flex-col items-center gap-1.5 active:scale-95"
           >
             <span
@@ -30,12 +30,12 @@ export default function CategoryGrid({ categories, active, onSelect }) {
               {c.icon}
             </span>
             <span
-              className={`line-clamp-2 w-full px-0.5 text-center font-urdu text-[0.7rem] leading-snug font-bold sm:text-xs ${
-                isActive ? "text-accent-dark" : "text-ink"
-              }`}
-            >
-              {c.label}
-            </span>
+  className={`w-full px-0.5 pb-1 text-center font-urdu text-[0.75rem] leading-[1.9] font-bold sm:text-xs ${
+    isActive ? "text-accent-dark" : "text-ink"
+  }`}
+>
+  {c.label}
+</span>
           </button>
         );
       })}

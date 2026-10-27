@@ -9,21 +9,30 @@ export default function AddServiceButton() {
 
   return (
     <>
-            <div dir="rtl" className="mb-4 mt-3 flex flex-wrap items-center justify-center gap-2">
+      <div dir="rtl" className="mx-auto mb-4 mt-3 flex w-full max-w-[280px] flex-col gap-2">
+        {/* Add service button */}
         <button
           onClick={() => setOpen(true)}
-          className="cursor-pointer rounded-full bg-accent px-4 py-2 font-urdu text-sm font-bold text-white shadow-soft active:scale-95"
+          className="flex w-full cursor-pointer items-center justify-between rounded-xl border-b-[3px] border-black/20 bg-accent px-3 py-1.5 font-urdu text-sm font-bold leading-relaxed text-white shadow-soft transition active:translate-y-0.5 active:border-b-2"
         >
-          ➕ اپنی سروس شامل کریں
+          <span className="flex items-center gap-2">
+            <span className="flex size-6 items-center justify-center rounded-full bg-white text-base font-bold text-accent">
+              +
+            </span>
+            اپنی سروس شامل کریں
+          </span>
+          <span className="text-xl leading-none">‹</span>
         </button>
-               <a
+
+        {/* WhatsApp button */}
+        <a
           href={`https://wa.me/${WHATSAPP}`}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-1.5 rounded-full bg-whatsapp px-4 py-2 font-urdu text-sm font-bold text-white shadow-soft active:scale-95"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border-b-[3px] border-black/20 bg-whatsapp px-3 py-1.5 font-urdu text-sm font-bold leading-relaxed text-white shadow-soft transition active:translate-y-0.5 active:border-b-2"
         >
           <WhatsAppIcon />
-          واٹس ایپ پر ہم سے رابطہ کریں
+          ہمارا واٹس ایپ رابطہ
         </a>
       </div>
 

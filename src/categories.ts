@@ -11,6 +11,6 @@ export async function fetchCategories() {
   const snap = await getDocs(collection(db, "categories"));
   const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   if (list.length === 0) return { list: defaultCategories, fromFirestore: false };
-  list.sort((a, b) => (a.order || 0) - (b.order || 0));
+ list.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
   return { list, fromFirestore: true };
 }

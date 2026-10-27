@@ -43,7 +43,9 @@ export default function Home() {
     async function load() {
   try {
     const snapshot = await getDocs(collection(db, "workers"));
-    const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+   const list = snapshot.docs
+  .map((d) => ({ id: d.id, ...d.data() }))
+  .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
     setWorkers(list);
     setStatus("ready");
     localStorage.setItem(CACHE_KEY, JSON.stringify(list));
@@ -66,14 +68,15 @@ export default function Home() {
 
   const categories = [allCategory, ...(cats || [])];
 
-  const selectCategory = (id) => {
-    setQuery("");
-    lastCategory.current = id;
-    setCategory(id);
-    setTimeout(() => {
-      listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
-  };
+ const selectCategory = (id) => {
+  setQuery("");
+  lastCategory.current = id;
+  setCategory(id);
+ 
+  setTimeout(() => {
+    listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 100);
+};
 
   const searching = query.trim().length > 0;
   const filtered = searching
