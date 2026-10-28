@@ -10,6 +10,7 @@ import WorkerCard from "../components/WorkerCard";
 import GroupCard from "../components/GroupCard";
 import InstallGuide from "../components/InstallGuide";
 import ScrollTopButton from "../components/ScrollTopButton";
+import DisclaimerLink from "./components/DisclaimerLink";
 
 const allCategory = { id: "all", icon: "🧩", label: "تمام خدمات" };
 
@@ -97,6 +98,7 @@ export default function Home() {
       </main>
 
       <ScrollTopButton getLastCategory={() => lastCategory.current} />
+
 
       <InstallGuide />
 

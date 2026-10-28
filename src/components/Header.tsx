@@ -6,9 +6,9 @@ export default function Header() {
         <h1 className="font-poppins text-xl font-extrabold whitespace-nowrap sm:text-2xl md:text-3xl">
           🏘️ Balkassar Connect
         </h1>
-        <p className="font-urdu text-right text-sm whitespace-nowrap opacity-90 sm:text-base md:text-xl">
-          بلکسر کی تمام سروسز ایک جگہ
-        </p>
+       <p className="font-urdu mt-3 text-right text-sm leading-relaxed opacity-90 sm:mt-4 sm:text-base md:mt-5 md:text-xl">
+  بلکسر، بکھاری کلاں، تھوہا بہادر و دیگر کی سروسز ایک جگہ
+</p>
       </div>
     </header>
   );
